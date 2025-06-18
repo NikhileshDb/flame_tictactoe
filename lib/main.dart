@@ -1,5 +1,6 @@
 import 'package:bakku/nakama_service/nakama_screen.dart';
 import 'package:bakku/tic_tac_toe/blocs/nakama_blocs/nakama_bloc.dart';
+import 'package:bakku/tic_tac_toe/blocs/socket_blocs/socket_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -31,11 +32,18 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      // home: NakamaScreen(),
-      home: BlocProvider(
-        create: (context) => NakamaBloc(nakamaClient: client),
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<NakamaBloc>(
+            create: (context) => NakamaBloc(nakamaClient: client),
+          ),
+        ],
         child: const NakamaScreen(),
       ),
+      // home: BlocProvider(
+      //   create: (context) => NakamaBloc(nakamaClient: client),
+      //   child: const NakamaScreen(),
+      // ),
     );
   }
 }

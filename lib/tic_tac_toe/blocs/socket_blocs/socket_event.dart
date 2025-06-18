@@ -6,3 +6,12 @@ sealed class SocketEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class MatchMakerMatchEvent extends SocketEvent {
+  final MatchmakerMatched matchData;
+
+  const MatchMakerMatchEvent(this.matchData);
+
+  @override
+  List<Object> get props => [matchData];
+}
