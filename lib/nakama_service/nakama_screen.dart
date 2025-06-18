@@ -1,7 +1,5 @@
-import 'dart:io';
-
 import 'package:bakku/tic_tac_toe/blocs/nakama_blocs/nakama_bloc.dart';
-import 'package:bakku/tic_tac_toe/blocs/socket_blocs/socket_bloc.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nakama/nakama.dart';
@@ -63,31 +61,6 @@ class _NakamaScreenState extends State<NakamaScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  BlocProvider(
-                    create: (context) => SocketBloc(socket: state.socket),
-                    child: BlocBuilder(
-                      builder: (context, state) {
-                        if (state is SocketMatchFoundState) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Match Found: ${state.matchData.matchId}',
-                                style: const TextStyle(
-                                  color: Colors.blue,
-                                  fontSize: 16,
-                                ),
-                              ),
-
-                              Text('Users ${state.matchData.users}'),
-                            ],
-                          );
-                        }
-                        return CircularProgressIndicator(color: Colors.blue);
-                      },
-                    ),
-                  ),
                   Text(
                     'WebSocket Authenticated',
                     style: const TextStyle(color: Colors.green, fontSize: 18),

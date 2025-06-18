@@ -1,6 +1,7 @@
 import 'package:bakku/nakama_service/nakama_screen.dart';
+import 'package:bakku/tic_tac_toe/blocs/match_blocs/match_bloc.dart';
 import 'package:bakku/tic_tac_toe/blocs/nakama_blocs/nakama_bloc.dart';
-import 'package:bakku/tic_tac_toe/blocs/socket_blocs/socket_bloc.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -36,6 +37,10 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider<NakamaBloc>(
             create: (context) => NakamaBloc(nakamaClient: client),
+          ),
+          BlocProvider(
+            create: (context) =>
+                MatchBloc(nakamaBloc: context.read<NakamaBloc>()),
           ),
         ],
         child: const NakamaScreen(),

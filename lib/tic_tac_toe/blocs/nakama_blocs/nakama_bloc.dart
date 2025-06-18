@@ -15,7 +15,7 @@ part 'nakama_state.dart';
 
 class NakamaBloc extends Bloc<NakamaEvent, NakamaState> {
   final NakamaBaseClient nakamaClient;
-
+  late StreamSubscription _matchmakerSubscription;
   NakamaBloc({required this.nakamaClient}) : super(NakamaInitialState()) {
     on<NakamaLoginEvent>(_handleNakamaLogin);
     on<NakamaWebSocketAuthenticateEvent>(_handleWebSocketAuthentication);
@@ -106,5 +106,17 @@ class NakamaBloc extends Bloc<NakamaEvent, NakamaState> {
     );
     logger.d("Matchmaking Ticket: ${ticket.ticket}");
     emit(NakamaMatchMakingTicketState(ticket: ticket));
+    // _matchmakerSubscription = event.socket.onMatchmakerMatched.listen((
+    //   matchData,
+    // ) {
+    //   // add(NakamaMatchFoundEvent(matchData));
+    //   logger.d("Match Found: ${matchData.matchId}");
+    // });
+  }
+
+  @override
+  Future<void> close() {
+    _matchmakerSubscription.cancel();
+    return super.close();
   }
 }
