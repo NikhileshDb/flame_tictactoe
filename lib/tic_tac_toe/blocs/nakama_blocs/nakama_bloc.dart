@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:bakku/nakama_service/testing.dart';
 import 'package:bakku/utils/logger.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -106,6 +108,11 @@ class NakamaBloc extends Bloc<NakamaEvent, NakamaState> {
     );
     logger.d("Matchmaking Ticket: ${ticket.ticket}");
     emit(NakamaMatchMakingTicketState(ticket: ticket));
+    var res = await event.socket.rpc(
+      id: 'find_match',
+      payload: jsonEncode({"fast": true, "ai": false}),
+    );
+    logger.d(res.payload);
     // _matchmakerSubscription = event.socket.onMatchmakerMatched.listen((
     //   matchData,
     // ) {
