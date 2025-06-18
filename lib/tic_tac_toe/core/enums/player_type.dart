@@ -1,0 +1,1 @@
+enum PlayerType { x, o }
