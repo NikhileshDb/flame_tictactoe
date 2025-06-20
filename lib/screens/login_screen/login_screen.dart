@@ -1,4 +1,5 @@
 import 'package:bakku/global_widgets/chips.dart';
+import 'package:bakku/screens/match_making_screen/match_making_screen.dart';
 import 'package:bakku/tic_tac_toe/blocs/authentication/authentication_bloc.dart';
 import 'package:bakku/tic_tac_toe/blocs/match_making_bloc/match_making_bloc.dart';
 import 'package:flutter/material.dart';
@@ -85,6 +86,17 @@ class LoginScreen extends StatelessWidget {
                               },
                               child: Text("Start Matchmaking"),
                             ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MatchMakingScreen(),
+                                ),
+                              );
+                            },
+                            child: Text("JOIN MATCH"),
+                          ),
                         ],
                       );
                     },

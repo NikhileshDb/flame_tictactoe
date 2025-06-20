@@ -24,3 +24,12 @@ class ChipSelectEvent extends MatchMakingEvent {
   @override
   List<Object> get props => [chip];
 }
+
+class JoinMatchEvent extends MatchMakingEvent {
+  final String matchId;
+
+  const JoinMatchEvent(this.matchId);
+
+  @override
+  List<Object> get props => [matchId];
+}

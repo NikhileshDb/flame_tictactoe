@@ -17,27 +17,34 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
   MatchMakingBloc({this.session, this.socket}) : super(MatchMakingInitial()) {
     on<ChipSelectEvent>(_handleChipSelection);
 
-    on<MatchMakingStartEvent>((event, emit) async {
-      socket = NakamaWebsocketClient.init(
-        host: dotenv.env["NAKAMA_HOST"] as String,
-        ssl: false,
-        token: event.session.token,
-      );
+    on<MatchMakingStartEvent>(_handleMatchMaking);
 
-      _matchmakerSubscription = socket!.onMatchmakerMatched.listen((
-        MatchmakerMatched data,
-      ) {
-        emit(MatchMakingSuccess(data.matchId as String));
-      });
+    on<JoinMatchEvent>(_handleJoinMatch);
+  }
 
-      // Call the RPC find_match
-      var rpcResponse = await socket!.rpc(
-        id: 'find_match_js',
-        payload: jsonEncode({"fast": true, "ai": false}),
-      );
+  FutureOr<void> _handleMatchMaking(
+    MatchMakingStartEvent event,
+    Emitter<MatchMakingState> emit,
+  ) async {
+    socket = NakamaWebsocketClient.init(
+      host: dotenv.env["NAKAMA_HOST"] as String,
+      ssl: false,
+      token: event.session.token,
+    );
 
-      logger.d("RPC Response: $rpcResponse");
+    _matchmakerSubscription = socket!.onMatchmakerMatched.listen((
+      MatchmakerMatched data,
+    ) {
+      emit(MatchMakingSuccess(data.matchId as String));
     });
+
+    // Call the RPC find_match
+    var rpcResponse = await socket!.rpc(
+      id: 'find_match_js',
+      payload: jsonEncode({"fast": true, "ai": false}),
+    );
+
+    logger.d("RPC Response: $rpcResponse");
   }
 
   @override
@@ -51,5 +58,14 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
     Emitter<MatchMakingState> emit,
   ) {
     emit(ChipSelectedState(event.chip));
+  }
+
+  FutureOr<void> _handleJoinMatch(
+    JoinMatchEvent event,
+    Emitter<MatchMakingState> emit,
+  ) async {
+    var matchId = event.matchId;
+    var match = await socket?.joinMatch(matchId);
+    logger.d("Joined match: $match");
   }
 }

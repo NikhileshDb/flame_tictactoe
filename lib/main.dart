@@ -24,27 +24,28 @@ class MyApp extends StatelessWidget {
       grpcPort: int.parse(dotenv.env['NAKAMA_GRPC_PORT'] as String),
       httpPort: int.parse(dotenv.env['NAKAMA_HTTP_PORT'] as String),
     );
-    return MaterialApp(
-      title: 'Tic Tac Toe',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        brightness: Brightness.dark,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthenticationBloc>(
+          create: (_) => AuthenticationBloc(nakamaBaseClient: client),
+        ),
+        BlocProvider(create: (_) => MatchMakingBloc()),
+      ],
+      child: MaterialApp(
+        title: 'Tic Tac Toe',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          brightness: Brightness.dark,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: LoginScreen(),
+        // home: BlocProvider(
+        //   create: (context) => NakamaBloc(nakamaClient: client),
+        //   child: const NakamaScreen(),
+        // ),
       ),
-      home: MultiBlocProvider(
-        providers: [
-          BlocProvider<AuthenticationBloc>(
-            create: (context) => AuthenticationBloc(nakamaBaseClient: client),
-          ),
-          BlocProvider(create: (context) => MatchMakingBloc()),
-        ],
-        child: const LoginScreen(),
-      ),
-      // home: BlocProvider(
-      //   create: (context) => NakamaBloc(nakamaClient: client),
-      //   child: const NakamaScreen(),
-      // ),
     );
   }
 }
