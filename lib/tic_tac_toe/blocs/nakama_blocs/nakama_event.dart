@@ -62,3 +62,13 @@ class NakamaStartMatchMakingEvent extends NakamaEvent {
   @override
   List<Object> get props => [socket];
 }
+
+class NakamRpcFindMatchEvent extends NakamaEvent {
+  final NakamaWebsocketClient socket;
+  final Session session;
+
+  const NakamRpcFindMatchEvent(this.socket, this.session);
+
+  @override
+  List<Object> get props => [socket, session];
+}

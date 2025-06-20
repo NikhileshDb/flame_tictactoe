@@ -73,7 +73,8 @@ class _NakamaScreenState extends State<NakamaScreen> {
                   ElevatedButton(
                     onPressed: () {
                       context.read<NakamaBloc>().add(
-                        NakamaStartMatchMakingEvent(state.socket),
+                        // NakamaStartMatchMakingEvent(state.socket),
+                        NakamRpcFindMatchEvent(state.socket, session),
                       );
                     },
                     child: const Text('Start Matchmaking'),

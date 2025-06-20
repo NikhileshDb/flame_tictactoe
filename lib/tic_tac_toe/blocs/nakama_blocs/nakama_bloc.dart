@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:bakku/nakama_service/testing.dart';
 import 'package:bakku/utils/logger.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +20,7 @@ class NakamaBloc extends Bloc<NakamaEvent, NakamaState> {
     on<NakamaLoginEvent>(_handleNakamaLogin);
     on<NakamaWebSocketAuthenticateEvent>(_handleWebSocketAuthentication);
     on<NakamaStartMatchMakingEvent>(_handleNakamaStartMatchMaking);
+    on<NakamRpcFindMatchEvent>(_handleNakamaRpcFindMatch);
     on<NakamaErrorEvent>(_handleNakamaError);
   }
 
@@ -75,12 +74,15 @@ class NakamaBloc extends Bloc<NakamaEvent, NakamaState> {
       emit(NakamaErrorState("$e")); // Emit initial state on error
       return;
     }
+    return null;
   }
 
   FutureOr<void> _handleNakamaError(
     NakamaErrorEvent event,
     Emitter<NakamaState> emit,
-  ) {}
+  ) {
+    emit(NakamaErrorState(event.errorMessage)); // Emit error state with message
+  }
 
   FutureOr<void> _handleWebSocketAuthentication(
     NakamaWebSocketAuthenticateEvent event,
@@ -108,17 +110,37 @@ class NakamaBloc extends Bloc<NakamaEvent, NakamaState> {
     );
     logger.d("Matchmaking Ticket: ${ticket.ticket}");
     emit(NakamaMatchMakingTicketState(ticket: ticket));
-    var res = await event.socket.rpc(
-      id: 'find_match',
-      payload: jsonEncode({"fast": true, "ai": false}),
+    return null;
+
+    // var res = await event.socket.rpc(
+    //   id: 'find_match_js',
+    //   payload: jsonEncode({"fast": true, "ai": false}),
+    // );
+
+    // logger.d(res.payload);
+  }
+
+  FutureOr<void> _handleNakamaRpcFindMatch(
+    NakamRpcFindMatchEvent event,
+    Emitter<NakamaState> emit,
+  ) async {
+    var res = await nakamaClient.rpc(
+      session: event.session,
+      id: "find_match_js",
+      payload: '{"fast": true, "ai": false}',
     );
-    logger.d(res.payload);
-    // _matchmakerSubscription = event.socket.onMatchmakerMatched.listen((
-    //   matchData,
-    // ) {
-    //   // add(NakamaMatchFoundEvent(matchData));
-    //   logger.d("Match Found: ${matchData.matchId}");
-    // });
+    logger.d("RPC Response: $res");
+
+    _matchmakerSubscription = event.socket.onMatchmakerMatched.listen(
+      (matchData) {
+        // add(NakamaMatchFoundEvent(matchData));
+        logger.d("Match Found: ${matchData.matchId}");
+      },
+      onError: (error) {
+        logger.e("Matchmaker Error: $error");
+        add(NakamaErrorEvent("Matchmaker Error: $error"));
+      },
+    );
   }
 
   @override

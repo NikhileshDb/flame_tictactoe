@@ -1,7 +1,6 @@
-import 'package:bakku/nakama_service/nakama_screen.dart';
-import 'package:bakku/tic_tac_toe/blocs/match_blocs/match_bloc.dart';
-import 'package:bakku/tic_tac_toe/blocs/nakama_blocs/nakama_bloc.dart';
-
+import 'package:bakku/screens/login_screen/login_screen.dart';
+import 'package:bakku/tic_tac_toe/blocs/authentication/authentication_bloc.dart';
+import 'package:bakku/tic_tac_toe/blocs/match_making_bloc/match_making_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -35,15 +34,12 @@ class MyApp extends StatelessWidget {
       ),
       home: MultiBlocProvider(
         providers: [
-          BlocProvider<NakamaBloc>(
-            create: (context) => NakamaBloc(nakamaClient: client),
+          BlocProvider<AuthenticationBloc>(
+            create: (context) => AuthenticationBloc(nakamaBaseClient: client),
           ),
-          BlocProvider(
-            create: (context) =>
-                MatchBloc(nakamaBloc: context.read<NakamaBloc>()),
-          ),
+          BlocProvider(create: (context) => MatchMakingBloc()),
         ],
-        child: const NakamaScreen(),
+        child: const LoginScreen(),
       ),
       // home: BlocProvider(
       //   create: (context) => NakamaBloc(nakamaClient: client),

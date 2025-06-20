@@ -1,0 +1,39 @@
+part of 'match_making_bloc.dart';
+
+sealed class MatchMakingState extends Equatable {
+  const MatchMakingState();
+
+  @override
+  List<Object> get props => [];
+}
+
+final class MatchMakingInitial extends MatchMakingState {}
+
+class MatchMakingLoading extends MatchMakingState {}
+
+class MatchMakingError extends MatchMakingState {
+  final String message;
+
+  const MatchMakingError(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+class MatchMakingSuccess extends MatchMakingState {
+  final String matchId;
+
+  const MatchMakingSuccess(this.matchId);
+
+  @override
+  List<Object> get props => [matchId];
+}
+
+class ChipSelectedState extends MatchMakingState {
+  final int chip;
+
+  const ChipSelectedState(this.chip);
+
+  @override
+  List<Object> get props => [chip];
+}
