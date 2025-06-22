@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:bakku/utils/logger.dart';
 import 'package:equatable/equatable.dart';
@@ -35,16 +34,8 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
     _matchmakerSubscription = socket!.onMatchmakerMatched.listen((
       MatchmakerMatched data,
     ) {
-      emit(MatchMakingSuccess(data.matchId as String));
+      add(JoinMatchEvent(data.matchId as String));
     });
-
-    // Call the RPC find_match
-    // var rpcResponse = await socket!.rpc(
-    //   id: 'find_match_js',
-    //   payload: jsonEncode({"fast": true, "ai": false}),
-    // );
-
-    // logger.d("RPC Response: $rpcResponse");
 
     var ticket = await socket!.addMatchmaker(
       query: "*",
@@ -58,6 +49,7 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
 
   @override
   Future<void> close() {
+    logger.d("Closing MatchMakingBloc");
     _matchmakerSubscription.cancel();
     return super.close();
   }
