@@ -39,12 +39,21 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
     });
 
     // Call the RPC find_match
-    var rpcResponse = await socket!.rpc(
-      id: 'find_match_js',
-      payload: jsonEncode({"fast": true, "ai": false}),
-    );
+    // var rpcResponse = await socket!.rpc(
+    //   id: 'find_match_js',
+    //   payload: jsonEncode({"fast": true, "ai": false}),
+    // );
 
-    logger.d("RPC Response: $rpcResponse");
+    // logger.d("RPC Response: $rpcResponse");
+
+    var ticket = await socket!.addMatchmaker(
+      query: "*",
+      minCount: 2,
+      maxCount: 2,
+      stringProperties: {"fast": "true", "ai": "false"},
+      numericProperties: {"coin": 50},
+    );
+    logger.d(ticket);
   }
 
   @override
