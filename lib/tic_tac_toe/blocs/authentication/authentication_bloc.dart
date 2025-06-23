@@ -17,7 +17,6 @@ class AuthenticationBloc
     : super(AuthenticationInitial()) {
     on<AuthenticationLoginEvent>(_handleLogin);
   }
-
   FutureOr<void> _handleLogin(
     AuthenticationLoginEvent event,
     Emitter<AuthenticationState> emit,
@@ -25,8 +24,8 @@ class AuthenticationBloc
     Session session;
     try {
       emit(AuthenticationLoading());
-      Future.delayed(Duration(seconds: 2));
-      if (event.email.isEmpty || event.password.isEmpty) {
+      // Future.delayed(Duration(seconds: 2));
+      if (event.email == null || event.password == null) {
         // No email or password provided
         // Login with anonymous/deviceId
 
@@ -48,13 +47,16 @@ class AuthenticationBloc
           );
           emit(AuthenticationSuccess(session));
         } else if (Platform.isWindows) {
-          logger.d("Nakama Login Triggered: ${Platform.operatingSystem}");
           deviceId =
               (await deviceInfo.windowsInfo).deviceId; // Unique ID on Windows
+
           session = await nakamaBaseClient.authenticateDevice(
             deviceId: deviceId,
           );
+
           emit(AuthenticationSuccess(session));
+
+          logger.d("Nakama Login Triggered: ${Platform.operatingSystem}");
         } else {
           logger.d("Nakama Login Triggered: Unknown Platform");
           final uuid = Uuid();
@@ -68,8 +70,8 @@ class AuthenticationBloc
         // Login Using Email And Password
         logger.d("Nakama Login Triggered: Using Email and Password");
         session = await nakamaBaseClient.authenticateEmail(
-          password: event.password,
-          email: event.password,
+          password: event.password as String,
+          email: event.email,
         );
         emit(AuthenticationSuccess(session));
       }

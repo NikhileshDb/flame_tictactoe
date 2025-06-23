@@ -18,6 +18,8 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
 
     on<MatchMakingStartEvent>(_handleMatchMaking);
 
+    on<MatchFoundEvent>(_matchFound);
+
     on<JoinMatchEvent>(_handleJoinMatch);
   }
 
@@ -30,13 +32,6 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
       ssl: false,
       token: event.session.token,
     );
-
-    _matchmakerSubscription = socket!.onMatchmakerMatched.listen((
-      MatchmakerMatched data,
-    ) {
-      add(JoinMatchEvent(data.matchId as String));
-    });
-
     var ticket = await socket!.addMatchmaker(
       query: "*",
       minCount: 2,
@@ -44,7 +39,14 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
       stringProperties: {"fast": "true", "ai": "false"},
       numericProperties: {"coin": event.amount},
     );
+
     logger.d(ticket);
+
+    _matchmakerSubscription = socket!.onMatchmakerMatched.listen((
+      MatchmakerMatched data,
+    ) {
+      add(MatchFoundEvent(matchId: data.matchId as String));
+    });
   }
 
   FutureOr<void> _handleChipSelection(
@@ -65,8 +67,17 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
 
   @override
   Future<void> close() {
-    logger.d("Closing MatchMakingBloc");
+    logger.d("========> Closing MatchMakingBloc");
     _matchmakerSubscription.cancel();
+    socket!.close();
     return super.close();
+  }
+
+  FutureOr<void> _matchFound(
+    MatchFoundEvent event,
+    Emitter<MatchMakingState> emit,
+  ) {
+    logger.d("Match Found ${event.matchId}");
+    emit(MatchMakingSuccess(event.matchId));
   }
 }

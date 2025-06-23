@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Chips extends StatelessWidget {
-  final int amount;
+  final double amount;
   const Chips({super.key, required this.amount});
 
   @override

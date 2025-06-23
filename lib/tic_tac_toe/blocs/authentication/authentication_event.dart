@@ -8,13 +8,13 @@ sealed class AuthenticationEvent extends Equatable {
 }
 
 class AuthenticationLoginEvent extends AuthenticationEvent {
-  final String email;
-  final String password;
+  final String? email;
+  final String? password;
 
-  const AuthenticationLoginEvent({this.email = "", this.password = ""});
+  const AuthenticationLoginEvent({this.email, this.password});
 
   @override
-  List<Object> get props => [email, password];
+  List<Object> get props => [?email, ?password];
 }
 
 class AuthenticationLogoutEvent extends AuthenticationEvent {}
