@@ -30,7 +30,7 @@ class MatchMakingSuccess extends MatchMakingState {
 }
 
 class ChipSelectedState extends MatchMakingState {
-  final int chip;
+  final double chip;
 
   const ChipSelectedState(this.chip);
 

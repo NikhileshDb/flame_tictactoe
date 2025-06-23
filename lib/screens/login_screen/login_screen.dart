@@ -81,6 +81,7 @@ class LoginScreen extends StatelessWidget {
                                 context.read<MatchMakingBloc>().add(
                                   MatchMakingStartEvent(
                                     session: successState.session,
+                                    amount: state.chip,
                                   ),
                                 );
                               },

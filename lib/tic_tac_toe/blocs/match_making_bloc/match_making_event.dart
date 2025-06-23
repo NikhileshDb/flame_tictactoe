@@ -9,15 +9,15 @@ sealed class MatchMakingEvent extends Equatable {
 
 class MatchMakingStartEvent extends MatchMakingEvent {
   final Session session;
-
-  const MatchMakingStartEvent({required this.session});
+  final double amount;
+  const MatchMakingStartEvent({required this.session, required this.amount});
 
   @override
   List<Object> get props => [session];
 }
 
 class ChipSelectEvent extends MatchMakingEvent {
-  final int chip;
+  final double chip;
 
   const ChipSelectEvent(this.chip);
 

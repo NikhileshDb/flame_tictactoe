@@ -42,16 +42,9 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
       minCount: 2,
       maxCount: 2,
       stringProperties: {"fast": "true", "ai": "false"},
-      numericProperties: {"coin": 50},
+      numericProperties: {"coin": event.amount},
     );
     logger.d(ticket);
-  }
-
-  @override
-  Future<void> close() {
-    logger.d("Closing MatchMakingBloc");
-    _matchmakerSubscription.cancel();
-    return super.close();
   }
 
   FutureOr<void> _handleChipSelection(
@@ -68,5 +61,12 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
     var matchId = event.matchId;
     var match = await socket?.joinMatch(matchId);
     logger.d("Joined match: $match");
+  }
+
+  @override
+  Future<void> close() {
+    logger.d("Closing MatchMakingBloc");
+    _matchmakerSubscription.cancel();
+    return super.close();
   }
 }
