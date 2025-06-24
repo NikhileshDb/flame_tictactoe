@@ -10,7 +10,7 @@ part 'match_making_event.dart';
 part 'match_making_state.dart';
 
 class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
-  final Session? session;
+  Session? session;
   NakamaWebsocketClient? socket;
   late StreamSubscription _matchmakerSubscription;
   MatchMakingBloc({this.session, this.socket}) : super(MatchMakingInitial()) {
@@ -32,6 +32,8 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
       ssl: false,
       token: event.session.token,
     );
+
+    session = event.session;
     var ticket = await socket!.addMatchmaker(
       query: "*",
       minCount: 2,
@@ -77,10 +79,14 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
     MatchFoundEvent event,
     Emitter<MatchMakingState> emit,
   ) {
-    // Find the opponent
+    if (session == null) {
+      logger.e("Session is null. Cannot process match found.");
+    }
+
+    logger.d("Match Found ${event.data}");
+
     final opponent = event.data.users.firstWhere(
       (user) => user.presence.userId != session!.userId,
-      orElse: () => throw Exception('Opponent not found'),
     );
 
     final opponentId = opponent.presence.userId;
