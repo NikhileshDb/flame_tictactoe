@@ -26,11 +26,12 @@ class MatchMakingStartEvent extends MatchMakingEvent {
 }
 
 class MatchFoundEvent extends MatchMakingEvent {
-  final String matchId;
-  const MatchFoundEvent({required this.matchId});
+  final MatchmakerMatched data;
+
+  const MatchFoundEvent({required this.data});
 
   @override
-  List<Object> get props => [matchId];
+  List<Object> get props => [data];
 }
 
 class JoinMatchEvent extends MatchMakingEvent {

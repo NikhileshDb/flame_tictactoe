@@ -45,7 +45,7 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
     _matchmakerSubscription = socket!.onMatchmakerMatched.listen((
       MatchmakerMatched data,
     ) {
-      add(MatchFoundEvent(matchId: data.matchId as String));
+      add(MatchFoundEvent(data: data));
     });
   }
 
@@ -77,7 +77,7 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
     MatchFoundEvent event,
     Emitter<MatchMakingState> emit,
   ) {
-    logger.d("Match Found ${event.matchId}");
-    emit(MatchMakingSuccess(event.matchId));
+    logger.d("Match Found ${event.data}");
+    emit(MatchMakingSuccess(event.data.matchId as String));
   }
 }
