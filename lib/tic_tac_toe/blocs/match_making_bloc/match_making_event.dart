@@ -44,3 +44,13 @@ class JoinMatchEvent extends MatchMakingEvent {
 }
 
 class CreateMatchAiEvent extends MatchMakingEvent {}
+
+class SendMatchDataEvent extends MatchMakingEvent {
+  final String matchId;
+  final int index;
+
+  const SendMatchDataEvent({required this.matchId, required this.index});
+
+  @override
+  List<Object> get props => [matchId, index];
+}

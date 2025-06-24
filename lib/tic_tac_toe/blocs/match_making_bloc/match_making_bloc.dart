@@ -47,6 +47,8 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
     on<JoinMatchEvent>(_handleJoinMatch);
 
     on<CreateMatchAiEvent>(_handleCreateAiMatch);
+
+    on<SendMatchDataEvent>(_handleSendMatchData);
   }
 
   FutureOr<void> _handleMatchMaking(
@@ -116,5 +118,16 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
     var incomingPayload = jsonDecode(rpcResponse.payload);
     logger.d("MatchId to Join => ${incomingPayload["matchIds"][0]}");
     add(JoinMatchEvent(incomingPayload["matchIds"][0]));
+  }
+
+  FutureOr<void> _handleSendMatchData(
+    SendMatchDataEvent event,
+    Emitter<MatchMakingState> emit,
+  ) {
+    socket!.sendMatchData(
+      matchId: event.matchId,
+      opCode: 4,
+      data: [event.index],
+    );
   }
 }

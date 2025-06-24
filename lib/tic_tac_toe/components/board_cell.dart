@@ -28,6 +28,7 @@ class BoardCell extends PositionComponent
     // Only handle tap if cell is empty
     if (cellState == CellState.empty) {
       bloc.add(CellTapped(index));
+
       return true; // Consume the event
     }
     return false; // Don't consume if cell is occupied

@@ -1,6 +1,7 @@
 import 'package:bakku/global_widgets/chips.dart';
 import 'package:bakku/tic_tac_toe/blocs/match_making_bloc/match_making_bloc.dart';
 import 'package:bakku/tic_tac_toe/ui/screens/game_screen.dart';
+import 'package:bakku/utils/logger.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,13 +23,13 @@ class MatchMakingScreen extends StatelessWidget {
 
         body: BlocConsumer<MatchMakingBloc, MatchMakingState>(
           listener: (context, state) => {
-            if (state is MatchJoinedState)
-              {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => GameScreen()),
-                ),
-              },
+            // if (state is MatchJoinedState)
+            //   {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => GameScreen()),
+            //     ),
+            //   },
           },
           builder: (context, state) {
             return Column(
@@ -75,6 +76,21 @@ class MatchMakingScreen extends StatelessWidget {
                   },
                   child: Text('Create match with AI'),
                 ),
+                if (state is MatchJoinedState)
+                  TextField(
+                    onSubmitted: (data) {
+                      context.read<MatchMakingBloc>().add(
+                        SendMatchDataEvent(
+                          matchId: state.matchId,
+                          index: int.parse(data),
+                        ),
+                      );
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Input Index',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
               ],
             );
           },
