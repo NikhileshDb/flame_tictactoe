@@ -1,7 +1,6 @@
 import 'package:bakku/screens/login_screen/login_screen.dart';
 import 'package:bakku/tic_tac_toe/blocs/authentication/authentication_bloc.dart';
 import 'package:bakku/tic_tac_toe/blocs/match_making_bloc/match_making_bloc.dart';
-import 'package:bakku/tic_tac_toe/cubits/match_timer_cubit/match_timer_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -32,7 +31,6 @@ class MyApp extends StatelessWidget {
           create: (_) => AuthenticationBloc(nakamaBaseClient: client),
         ),
         BlocProvider(create: (_) => MatchMakingBloc()),
-        BlocProvider(create: (_) => MatchTimerCubit()),
       ],
       child: MaterialApp(
         title: 'Tic Tac Toe',
