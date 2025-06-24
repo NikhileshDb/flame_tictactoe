@@ -34,6 +34,7 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
       // Uint8List.fromList(data.data as List<int>);
 
       // Decode
+
       String decoded = utf8.decode(Uint8List.fromList(data.data as List<int>));
       logger.d(decoded);
     });
