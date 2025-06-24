@@ -42,3 +42,5 @@ class JoinMatchEvent extends MatchMakingEvent {
   @override
   List<Object> get props => [matchId];
 }
+
+class CreateMatchAiEvent extends MatchMakingEvent {}

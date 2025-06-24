@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:bakku/utils/logger.dart';
+// import 'package:bakku/utils/logger.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,14 +33,14 @@ class AuthenticationBloc
         DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
         // Grabbing the device id from device_info_plus packages for ios and android
         if (Platform.isAndroid) {
-          logger.d("Nakama Login Triggered: ${Platform.operatingSystem}");
+          // logger.d("Nakama Login Triggered: ${Platform.operatingSystem}");
           deviceId = (await deviceInfo.androidInfo).id; // Unique ID on Android
           session = await nakamaBaseClient.authenticateDevice(
             deviceId: deviceId,
           );
           emit(AuthenticationSuccess(session));
         } else if (Platform.isIOS) {
-          logger.d("Nakama Login Triggered: ${Platform.operatingSystem}");
+          // logger.d("Nakama Login Triggered: ${Platform.operatingSystem}");
           deviceId = (await deviceInfo.iosInfo).identifierForVendor as String;
           session = await nakamaBaseClient.authenticateDevice(
             deviceId: deviceId,
@@ -56,9 +56,9 @@ class AuthenticationBloc
 
           emit(AuthenticationSuccess(session));
 
-          logger.d("Nakama Login Triggered: ${Platform.operatingSystem}");
+          // logger.d("Nakama Login Triggered: ${Platform.operatingSystem}");
         } else {
-          logger.d("Nakama Login Triggered: Unknown Platform");
+          // logger.d("Nakama Login Triggered: Unknown Platform");
           final uuid = Uuid();
           deviceId = uuid.v4(); // Generate a random UUID for other platforms
           session = await nakamaBaseClient.authenticateDevice(
@@ -68,7 +68,7 @@ class AuthenticationBloc
         }
       } else {
         // Login Using Email And Password
-        logger.d("Nakama Login Triggered: Using Email and Password");
+        // logger.d("Nakama Login Triggered: Using Email and Password");
         session = await nakamaBaseClient.authenticateEmail(
           password: event.password as String,
           email: event.email,

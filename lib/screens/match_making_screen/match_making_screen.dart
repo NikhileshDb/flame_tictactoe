@@ -9,65 +9,76 @@ import 'package:nakama/nakama.dart';
 class MatchMakingScreen extends StatelessWidget {
   final Session session;
   const MatchMakingScreen({required this.session, super.key});
-
+  //  BlocProvider<MatchMakingBloc>(create: (_) => MatchMakingBloc()),
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Match Making Screen'), actions: [
-        
-        ],
-      ),
+    return BlocProvider<MatchMakingBloc>(
+      create: (context) => MatchMakingBloc(session: session),
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Match Making Screen'), actions: [
+            
+            ],
+          ),
 
-      body: BlocConsumer<MatchMakingBloc, MatchMakingState>(
-        listener: (context, state) => {
-          if (state is MatchJoinedState)
-            {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => GameScreen()),
-              ),
-            },
-        },
-        builder: (context, state) {
-          return Column(
-            children: [
-              Row(
-                children: [
-                  Chips(amount: 20),
-                  Chips(amount: 50),
-                  Chips(amount: 100),
-                ],
-              ),
-              Text('User Id: ${session.userId}'),
+        body: BlocConsumer<MatchMakingBloc, MatchMakingState>(
+          listener: (context, state) => {
+            if (state is MatchJoinedState)
+              {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => GameScreen()),
+                ),
+              },
+          },
+          builder: (context, state) {
+            return Column(
+              children: [
+                Row(
+                  children: [
+                    Chips(amount: 20),
+                    Chips(amount: 50),
+                    Chips(amount: 100),
+                  ],
+                ),
+                Text('User Id: ${session.userId}'),
 
-              if (state is MatchMakingSuccess)
-                Text("Oppon Id: ${state.opponentId}"),
+                if (state is MatchMakingSuccess)
+                  Text("Oppon Id: ${state.opponentId}"),
 
-              if (state is ChipSelectedState)
-                if (state is! MatchMakingSuccess)
+                if (state is ChipSelectedState)
+                  if (state is! MatchMakingSuccess)
+                    TextButton(
+                      onPressed: () {
+                        context.read<MatchMakingBloc>().add(
+                          MatchMakingStartEvent(
+                            session: session,
+                            amount: state.chip,
+                          ),
+                        );
+                      },
+                      child: Text('Start Match Making'),
+                    ),
+
+                if (state is MatchMakingSuccess)
                   TextButton(
                     onPressed: () {
                       context.read<MatchMakingBloc>().add(
-                        MatchMakingStartEvent(
-                          session: session,
-                          amount: state.chip,
-                        ),
+                        JoinMatchEvent(state.matchId),
                       );
                     },
-                    child: Text('Start Match Making'),
+                    child: Text("Join Match"),
                   ),
-              if (state is MatchMakingSuccess)
+
                 TextButton(
                   onPressed: () {
-                    context.read<MatchMakingBloc>().add(
-                      JoinMatchEvent(state.matchId),
-                    );
+                    context.read<MatchMakingBloc>().add(CreateMatchAiEvent());
                   },
-                  child: Text("Join Match"),
+                  child: Text('Create match with AI'),
                 ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }

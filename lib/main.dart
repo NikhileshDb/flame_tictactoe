@@ -31,8 +31,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<AuthenticationBloc>(
           create: (_) => AuthenticationBloc(nakamaBaseClient: client),
         ),
-        BlocProvider(create: (_) => MatchMakingBloc()),
-        BlocProvider(create: (_) => GameBloc()),
+
+        BlocProvider<GameBloc>(create: (_) => GameBloc()),
       ],
       child: MaterialApp(
         title: 'Tic Tac Toe',

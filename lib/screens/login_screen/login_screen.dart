@@ -14,7 +14,7 @@ class LoginScreen extends StatelessWidget {
       body: BlocConsumer<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) {
           if (state is AuthenticationSuccess) {
-            logger.d(state.session);
+            // logger.d(state.session);
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
