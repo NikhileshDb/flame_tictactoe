@@ -22,8 +22,9 @@ class MatchMakingError extends MatchMakingState {
 
 class MatchMakingSuccess extends MatchMakingState {
   final String matchId;
+  final String opponentId;
 
-  const MatchMakingSuccess(this.matchId);
+  const MatchMakingSuccess(this.matchId, this.opponentId);
 
   @override
   List<Object> get props => [matchId];

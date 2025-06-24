@@ -78,6 +78,12 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
     Emitter<MatchMakingState> emit,
   ) {
     logger.d("Match Found ${event.data}");
-    emit(MatchMakingSuccess(event.data.matchId as String));
+    var opponentId = "";
+    event.data.users.map((user) {
+      if (session!.userId != user.presence.userId) {
+        opponentId = user.presence.userId;
+      }
+    });
+    emit(MatchMakingSuccess(event.data.matchId as String, opponentId));
   }
 }

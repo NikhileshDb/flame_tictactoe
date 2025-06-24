@@ -24,7 +24,10 @@ class MatchMakingScreen extends StatelessWidget {
                   Chips(amount: 100),
                 ],
               ),
-              if (state is MatchMakingSuccess) Text(state.matchId),
+              Text('User Id: ${session.userId}'),
+
+              if (state is MatchMakingSuccess)
+                Text("Oppon Id: ${state.opponentId}"),
               if (state is ChipSelectedState)
                 TextButton(
                   onPressed: () {
@@ -41,33 +44,6 @@ class MatchMakingScreen extends StatelessWidget {
           );
         },
       ),
-
-      // body: Center(
-      //   child: Column(
-      //     children: [
-      //       // Join Match Using Id
-      //       BlocBuilder<MatchMakingBloc, MatchMakingState>(
-      //         builder: (context, state) {
-      //           if (state is MatchMakingSuccess) {
-      //             return Text(state.matchId);
-      //           }
-      //           return Text('No Id Found');
-      //         },
-      //       ),
-
-      //       TextField(
-      //         decoration: InputDecoration(
-      //           labelText: 'Enter Match ID',
-      //           border: OutlineInputBorder(),
-      //         ),
-      //         onSubmitted: (matchId) {
-      //           // Dispatch event to join match
-      //           context.read<MatchMakingBloc>().add(JoinMatchEvent(matchId));
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
 }
