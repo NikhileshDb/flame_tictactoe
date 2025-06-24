@@ -65,6 +65,7 @@ class MatchMakingBloc extends Bloc<MatchMakingEvent, MatchMakingState> {
     var matchId = event.matchId;
     var match = await socket?.joinMatch(matchId);
     logger.d("Joined match: $match");
+    emit(MatchJoinedState(matchId));
   }
 
   @override

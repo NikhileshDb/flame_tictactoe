@@ -9,17 +9,6 @@ sealed class MatchMakingState extends Equatable {
 
 final class MatchMakingInitial extends MatchMakingState {}
 
-class MatchMakingLoading extends MatchMakingState {}
-
-class MatchMakingError extends MatchMakingState {
-  final String message;
-
-  const MatchMakingError(this.message);
-
-  @override
-  List<Object> get props => [message];
-}
-
 class MatchMakingSuccess extends MatchMakingState {
   final String matchId;
   final String opponentId;
@@ -37,4 +26,24 @@ class ChipSelectedState extends MatchMakingState {
 
   @override
   List<Object> get props => [chip];
+}
+
+class MatchJoinedState extends MatchMakingState {
+  final String matchId;
+
+  const MatchJoinedState(this.matchId);
+
+  @override
+  List<Object> get props => [matchId];
+}
+
+class MatchMakingLoading extends MatchMakingState {}
+
+class MatchMakingError extends MatchMakingState {
+  final String message;
+
+  const MatchMakingError(this.message);
+
+  @override
+  List<Object> get props => [message];
 }
